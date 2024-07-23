@@ -1,7 +1,7 @@
+PROGRAM := megaphone
+
 CXX := g++
 CXXFLAGS := -Wall -Wextra -Werror -std=c++98
-
-PROGRAM := megaphone
 
 SRC := megaphone.cpp
 OBJ := $(SRC:.cpp=.o)
