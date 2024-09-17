@@ -1,9 +1,11 @@
 #ifndef PHONEBOOK_HPP
 # define PHONEBOOK_HPP
 
+#include <iostream>
+
 class PhoneBook {
   public:
-    PhoneBook(const Contact contact) : contact(contact) {
+    PhoneBook() {
       std::cout << "PhoneBook Constructor called!" << std::endl;
     }
 
@@ -12,7 +14,8 @@ class PhoneBook {
     }
 
   private:
-    Contact contact;
+    static const int MAX_CONTACTS = 8;
+    Contact contacts[MAX_CONTACTS];
 };
 
 #endif
