@@ -14,8 +14,8 @@ class PhoneBook {
     }
 
   private:
-    static const int MAX_CONTACTS = 8;
-    Contact contacts[MAX_CONTACTS];
+    static const int kMaxContacts = 8;
+    Contact contacts[kMaxContacts];
 };
 
 #endif
