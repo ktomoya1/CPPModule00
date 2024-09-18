@@ -22,4 +22,7 @@ fclean: clean
 
 re: clean all
 
+fmt:
+	$(if $(SRC), clang-format --style=Google -i $(SRC))
+
 .PHONY: all clean fclean re
