@@ -1,16 +1,10 @@
 #pragma once
 
-#include <iostream>
-
 class PhoneBook {
   public:
-    PhoneBook() {
-      std::cout << "PhoneBook Constructor called!" << std::endl;
-    }
+    PhoneBook() {}
 
-    ~PhoneBook() {
-      std::cout << "PhoneBook Destructor called!" << std::endl;
-    }
+    ~PhoneBook() {}
 
   private:
     static const int kMaxContacts = 8;

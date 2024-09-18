@@ -3,15 +3,16 @@ PROGRAM := phonebook
 CXX := g++
 CXXFLAGS := -Wall -Wextra -Werror -std=c++98
 
-SRC := main.cpp
-OBJ := $(SRC:.cpp=.o)
+SRC := main.cc contact.cc \
+
+OBJ := $(SRC:.cc=.o)
 
 all: $(PROGRAM)
 
 $(PROGRAM): $(OBJ)
 	$(CXX) $(CXXFLAGS) $(OBJ) -o $(PROGRAM)
 
-%.o: %.cpp
+%.o: %.cc
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:

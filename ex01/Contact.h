@@ -1,23 +1,18 @@
 #pragma once
 
 #include <string>
-#include <iostream> // 確認メッセージ用
 
 class Contact {
   public:
-    Contact() {
-      std::cout << "Contact Constructor called!" << std::endl;
-    }
+    Contact() {}
 
-    ~Contact() {
-      std::cout << "Contact Destructor called!" << std::endl;
-    }
+    ~Contact() {}
 
-    std::string GetFirstName();
-    std::string GetLastName();
-    std::string GetNickname();
-    std::string GetPhoneNumber();
-    std::string GetDarkestSecret();
+    std::string GetFirstName(const std::string first_name_);
+    std::string GetLastName(const std::string last_name_);
+    std::string GetNickname(const std::string nickname_);
+    std::string GetPhoneNumber(const std::string phone_number_);
+    std::string GetDarkestSecret(const std::string darkest_secret_);
 
   private:
     const std::string first_name_; // クラスのデータメンバは末尾に_をつける
