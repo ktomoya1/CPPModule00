@@ -1,5 +1,4 @@
-#ifndef PHONEBOOK_HPP
-# define PHONEBOOK_HPP
+#pragma once
 
 #include <iostream>
 
@@ -15,7 +14,5 @@ class PhoneBook {
 
   private:
     static const int kMaxContacts = 8;
-    Contact contacts[kMaxContacts];
+    Contact contacts_[kMaxContacts];
 };
-
-#endif
