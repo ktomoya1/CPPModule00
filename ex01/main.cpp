@@ -16,7 +16,8 @@ int main() {
     } else if (command == "EXIT") {
       return 0;
     } else {
-      std::cout << "The valid commands are \"ADD\", \"SEARCH\" and \"EXIT\"" << std::endl;
+      std::cout << "The valid commands are \"ADD\", \"SEARCH\" and \"EXIT\""
+                << std::endl;
     }
   }
   return 0;
