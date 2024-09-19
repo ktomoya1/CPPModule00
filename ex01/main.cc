@@ -11,7 +11,7 @@ int main() {
     std::cout << "Please enter a command" << std::endl;
     std::cin >> command;
     if (command == "ADD") {
-      std::cout << "ADD" << std::endl;
+      phonebook.OverwriteContact();
     } else if (command == "SEARCH") {
       std::cout << "SEARCH" << std::endl;
     } else if (command == "EXIT") {

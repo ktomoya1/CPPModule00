@@ -3,7 +3,7 @@ PROGRAM := phonebook
 CXX := g++
 CXXFLAGS := -Wall -Wextra -Werror -std=c++98
 
-SRC := main.cc contact.cc \
+SRC := main.cc contact.cc phonebook.cc \
 
 OBJ := $(SRC:.cc=.o)
 
