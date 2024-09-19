@@ -3,16 +3,16 @@ PROGRAM := phonebook
 CXX := g++
 CXXFLAGS := -Wall -Wextra -Werror -std=c++98
 
-SRC := main.cc contact.cc phonebook.cc \
+SRC := $(wildcard *.cpp)
 
-OBJ := $(SRC:.cc=.o)
+OBJ := $(SRC:.cpp=.o)
 
 all: $(PROGRAM)
 
 $(PROGRAM): $(OBJ)
 	$(CXX) $(CXXFLAGS) $(OBJ) -o $(PROGRAM)
 
-%.o: %.cc
+%.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
@@ -26,4 +26,4 @@ re: clean all
 fmt:
 	$(if $(SRC), clang-format --style=Google -i $(SRC))
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re fmt
