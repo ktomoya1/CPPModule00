@@ -1,3 +1,4 @@
+#include <iostream>
 #include "PhoneBook.h"
 
 void  PhoneBook::ReceiveCommand() {
@@ -7,7 +8,7 @@ void  PhoneBook::ReceiveCommand() {
 
     std::cout << "Please enter a command" << std::endl;
     if (std::getline(std::cin, command) == false) {
-      std::cout << "EOF received" << std::endl;
+      std::cerr << "EOF received" << std::endl;
       return;
     }
     if (command == "ADD") {
@@ -30,10 +31,37 @@ void  PhoneBook::ReceiveCommand() {
 }
 
 void  PhoneBook::OverwriteContact(Contact& contact) {
-  std::string line;
+  std::string     line;
+  Contact::Field  field = Contact::kFirstName;
 
-  std::cout << "Please enter the first name" << std::endl;
-  std::getline(std::cin, line);
-  contact.SetFirstName(line);
+  while (true) {
+    switch (field) {
+      case Contact::kFirstName:
+        std::cout << "Please enter the first name" << std::endl;
+        std::getline(std::cin, line);
+        contact.SetFirstName(line);
+        field = Contact::kLastName;
+      case Contact::kLastName:
+        std::cout << "Please enter the last name" << std::endl;
+        std::getline(std::cin, line);
+        contact.SetLastName(line);
+        field = Contact::kNickname;
+      case Contact::kNickname:
+        std::cout << "Please enter the nickname" << std::endl;
+        std::getline(std::cin, line);
+        contact.SetNickname(line);
+        field = Contact::kPhoneNumber;
+      case Contact::kPhoneNumber:
+        std::cout << "Please enter the phone number" << std::endl;
+        std::getline(std::cin, line);
+        contact.SetPhoneNumber(line);
+        field = Contact::kDarkestSecret;
+      case Contact::kDarkestSecret:
+        std::cout << "Please enter the darkest secret" << std::endl;
+        std::getline(std::cin, line);
+        contact.SetDarkestSecret(line);
+        return;
+    }
+  }
   return;
 }

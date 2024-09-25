@@ -4,6 +4,14 @@
 
 class Contact {
   public:
+    enum Field {
+      kFirstName = 0,
+      kLastName,
+      kNickname,
+      kPhoneNumber,
+      kDarkestSecret,
+    };
+
     Contact() {}
 
     ~Contact() {}
