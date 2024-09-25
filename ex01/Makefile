@@ -3,25 +3,29 @@ PROGRAM := phonebook
 CXX := g++
 CXXFLAGS := -Wall -Wextra -Werror -std=c++98
 
-SRC := $(wildcard *.cpp)
+INCDIR := include
+SRCDIR := src
+OBJDIR := obj
 
-OBJ := $(SRC:.cpp=.o)
+SRC := $(wildcard $(SRCDIR)/*.cpp)
+OBJ := $(SRC:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 
 all: $(PROGRAM)
 
 $(PROGRAM): $(OBJ)
-	$(CXX) $(CXXFLAGS) $(OBJ) -o $(PROGRAM)
+	$(CXX) $(CXXFLAGS) $(OBJ) -o $@
 
-%.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
+	@mkdir -p $(@D)
+	$(CXX) $(CXXFLAGS) -I$(INCDIR) -c $< -o $@
 
 clean:
-	rm -f $(OBJ)
+	rm -rf $(OBJDIR)
 
 fclean: clean
 	rm -f $(PROGRAM)
 
-re: clean all
+re: fclean all
 
 fmt:
 	$(if $(SRC), clang-format --style=Google -i $(SRC))

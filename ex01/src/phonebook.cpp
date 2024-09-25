@@ -1,10 +1,11 @@
-#include <iostream>
 #include "PhoneBook.h"
 
-void  PhoneBook::ReceiveCommand() {
+#include <iostream>
+
+void PhoneBook::ReceiveCommand() {
   while (true) {
     std::string command;
-    int         write_index = 0;
+    int write_index = 0;
 
     std::cout << "Please enter a command" << std::endl;
     if (std::getline(std::cin, command) == false) {
@@ -30,9 +31,9 @@ void  PhoneBook::ReceiveCommand() {
   return;
 }
 
-void  PhoneBook::OverwriteContact(Contact& contact) {
-  std::string     line;
-  Contact::Field  field = Contact::kFirstName;
+void PhoneBook::OverwriteContact(Contact& contact) {
+  std::string line;
+  Contact::Field field = Contact::kFirstName;
 
   while (true) {
     switch (field) {
