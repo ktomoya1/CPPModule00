@@ -12,7 +12,7 @@ class PhoneBook {
     ~PhoneBook() {}
 
     void  ReceiveCommand();
-    void  OverwriteContact();
+    void  OverwriteContact(Contact& contact);
 
   private:
     static const int kMaxContacts = 8;
