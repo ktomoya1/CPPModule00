@@ -1,5 +1,8 @@
 #pragma once
 
+#include <iostream>
+#include <string>
+
 #include "Contact.h"
 
 class PhoneBook {
@@ -9,7 +12,8 @@ class PhoneBook {
     ~PhoneBook() {}
 
     void  ReceiveCommand();
-    void  OverwriteContact(Contact& contact);
+    bool  OverwriteContact(Contact& contact);
+    bool  GetInput(const std::string& prompt, std::string& input);
 
   private:
     static const int kMaxContacts = 8;

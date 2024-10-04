@@ -1,19 +1,23 @@
-#include "PhoneBook.h"
-
 #include <iostream>
+#include <string>
+
+#include "PhoneBook.h"
 
 void PhoneBook::ReceiveCommand() {
   while (true) {
     std::string command;
     int write_index = 0;
 
-    std::cout << "Please enter a command" << std::endl;
-    if (std::getline(std::cin, command) == false) {
-      std::cerr << "EOF received" << std::endl;
+    if (!this->GetInput("Please enter a command", command)) {
       return;
-    }
-    if (command == "ADD") {
-      this->OverwriteContact(this->contacts_[write_index]);
+    };
+
+    if (command.empty()) {
+      continue;
+    } else if (command == "ADD") {
+      if (!this->OverwriteContact(this->contacts_[write_index])) {
+        return;
+      }
       if (++write_index == kMaxContacts) {
         write_index = 0;
       }
@@ -21,8 +25,6 @@ void PhoneBook::ReceiveCommand() {
       std::cout << "SEARCH" << std::endl;
     } else if (command == "EXIT") {
       return;
-    } else if (command.empty()) {
-      continue;
     } else {
       std::cout << "The valid commands are \"ADD\", \"SEARCH\" and \"EXIT\""
                 << std::endl;
@@ -31,38 +33,39 @@ void PhoneBook::ReceiveCommand() {
   return;
 }
 
-void PhoneBook::OverwriteContact(Contact& contact) {
-  std::string line;
-  Contact::Field field = Contact::kFirstName;
+// contactにフィールドを設定
+bool PhoneBook::OverwriteContact(Contact& contact) {
+  std::string first_name, last_name, nickname, phone_number, darkest_secret;
+  // 入力を取得
+  if (!this->GetInput("Please enter the first name", first_name)) {
+    return false;
+  } else if (!this->GetInput("Please enter the last name", last_name)) {
+    return false;
+  } else if (!this->GetInput("Please enter the nickname", nickname)) {
+    return false;
+  } else if (!this->GetInput("Please enter the phone number", phone_number)) {
+    return false;
+  } else if (!this->GetInput("Please enter the darkest secret", darkest_secret)) {
+    return false;
+  };
+  // setterメソッドを使う
+  contact.SetFirstName(first_name);
+  contact.SetLastName(last_name);
+  contact.SetNickname(nickname);
+  contact.SetPhoneNumber(phone_number);
+  contact.SetDarkestSecret(darkest_secret);
+  return true;
+}
 
-  while (true) {
-    switch (field) {
-      case Contact::kFirstName:
-        std::cout << "Please enter the first name" << std::endl;
-        std::getline(std::cin, line);
-        contact.SetFirstName(line);
-        field = Contact::kLastName;
-      case Contact::kLastName:
-        std::cout << "Please enter the last name" << std::endl;
-        std::getline(std::cin, line);
-        contact.SetLastName(line);
-        field = Contact::kNickname;
-      case Contact::kNickname:
-        std::cout << "Please enter the nickname" << std::endl;
-        std::getline(std::cin, line);
-        contact.SetNickname(line);
-        field = Contact::kPhoneNumber;
-      case Contact::kPhoneNumber:
-        std::cout << "Please enter the phone number" << std::endl;
-        std::getline(std::cin, line);
-        contact.SetPhoneNumber(line);
-        field = Contact::kDarkestSecret;
-      case Contact::kDarkestSecret:
-        std::cout << "Please enter the darkest secret" << std::endl;
-        std::getline(std::cin, line);
-        contact.SetDarkestSecret(line);
-        return;
+bool  PhoneBook::GetInput(const std::string& prompt, std::string& input) {
+  std::cout << prompt << std::endl;
+  if (!std::getline(std::cin, input)) {
+    if (std::cin.eof()) {
+      std::cerr << "EOF received" << std::endl;
+    } else {
+      std::cerr << "Failed to input" << std::endl;
     }
+    return false;
   }
-  return;
+  return true;
 }
