@@ -98,6 +98,10 @@ bool PhoneBook::SearchContact(Contact* contacts) {
   if (!this->GetInputNumber(
           "Please enter the index of the contact you want to view: ", index))
     return false;
+  if (index < 0 || kMaxContacts <= index) {
+    std::cout << "The index value is out of range" << std::endl;
+    return false;
+  }
   this->DisplayContactDetails(contacts[index]);
   return true;
 }
@@ -111,15 +115,9 @@ void PhoneBook::DisplayContactList(Contact* contacts, int size) {
 }
 
 void PhoneBook::DisplayContactRow(Contact& contact) {
-  std::string trunc_first_name = contact.GetFirstName(),
-              trunc_last_name = contact.GetLastName(),
-              trunc_nickname = contact.GetNickname();
-  if (trunc_first_name.size() > 10)
-    trunc_first_name = trunc_first_name.substr(0, 9) + ".";
-  if (trunc_last_name.size() > 10)
-    trunc_last_name = trunc_last_name.substr(0, 9) + ".";
-  if (trunc_nickname.size() > 10)
-    trunc_nickname = trunc_nickname.substr(0, 9) + ".";
+  std::string trunc_first_name = this->TruncateField(contact.GetFirstName(), kFieldWidth),
+              trunc_last_name = this->TruncateField(contact.GetLastName(), kFieldWidth),
+              trunc_nickname = this->TruncateField(contact.GetNickname(), kFieldWidth);
   std::cout << "|"
             << std::setw(10) << contact.GetIndex() << "|"
             << std::setw(10) << trunc_first_name   << "|"
@@ -143,4 +141,9 @@ void PhoneBook::DisplayContactDetails(Contact& contact) {
             << std::setw(16) << "darkest Secret: " << contact.GetDarkestSecret()
             << std::endl;
   return;
+}
+
+std::string PhoneBook::TruncateField(const std::string& field, std::string::size_type width) {
+  return (field.size() > width) ? field.substr(0, width - 1) + "."
+                                : field;
 }

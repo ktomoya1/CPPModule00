@@ -20,9 +20,11 @@ class PhoneBook {
     void  DisplayContactList(Contact* contacts, int size);
     void  DisplayContactRow(Contact& contact);
     void  DisplayContactDetails(Contact& contact);
+    std::string TruncateField(const std::string& field, std::string::size_type width);
 
   private:
     static const int kInvalidInput = -1;
-    static const int kMaxContacts = 3;
+    static const int kMaxContacts = 8;
+    static const int kFieldWidth = 10;
     Contact contacts_[kMaxContacts];
 };
