@@ -5,9 +5,9 @@
 #include <sstream>
 #include <string>
 
-PhoneBook::PhoneBook() {
+PhoneBook::PhoneBook() : contact_count_(0) {
   for (int i = 0; i < kMaxContacts; ++i) {
-    this->contacts_[i].SetIndex(i + 1);
+    this->contacts_[i].SetIndex(i);
   }
 }
 
@@ -29,9 +29,12 @@ void PhoneBook::ReceiveCommand() {
         write_index = 0;
       }
     } else if (command == "SEARCH") {
-      this->DisplayContactList(this->contacts_, kMaxContacts);
-      if (!this->SearchContact(this->contacts_))
+      if (!this->DisplayContactList(this->contacts_)) {
+        continue;
+      }
+      if (!this->SearchContact(this->contacts_)) {
         return;
+      }
     } else if (command == "EXIT") {
       return;
     } else {
@@ -94,8 +97,13 @@ bool PhoneBook::OverwriteContact(Contact& contact) {
   contact.SetNickname(nickname);
   contact.SetPhoneNumber(phone_number);
   contact.SetDarkestSecret(darkest_secret);
+  this->AddContactCount();
   return true;
 }
+
+void PhoneBook::AddContactCount() { contact_count_++; }
+
+int PhoneBook::GetContactCount() { return contact_count_; }
 
 bool PhoneBook::SearchContact(Contact* contacts) {
   std::string input_string;
@@ -116,15 +124,19 @@ bool PhoneBook::SearchContact(Contact* contacts) {
   return true;
 }
 
-// Todo: 電子帳を書いた数だけ表示する
-void PhoneBook::DisplayContactList(Contact* contacts, int size) {
+bool PhoneBook::DisplayContactList(Contact* contacts) {
+  int size = this->GetContactCount();
+  if (size == 0) {
+    std::cout << "No contacts available" << std::endl;
+    return false;
+  }
   std::cout << "---------------------------------------------" << std::endl;
   std::cout << "|     index|first name| last name|  nickname|" << std::endl;
   std::cout << "---------------------------------------------" << std::endl;
   for (int i = 0; i < size; ++i) {
     this->DisplayContactRow(contacts[i]);
   }
-  return;
+  return true;
 }
 
 void PhoneBook::DisplayContactRow(Contact& contact) {
@@ -137,6 +149,7 @@ void PhoneBook::DisplayContactRow(Contact& contact) {
             << std::setw(10) << trunc_last_name    << "|"
             << std::setw(10) << trunc_nickname     << "|"
             << std::endl;
+  std::cout << "---------------------------------------------" << std::endl;
   return;
 }
 
