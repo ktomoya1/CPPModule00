@@ -2,11 +2,12 @@
 
 #include <iomanip>
 #include <iostream>
+#include <sstream>
 #include <string>
 
 PhoneBook::PhoneBook() {
   for (int i = 0; i < kMaxContacts; ++i) {
-    contacts_[i].SetIndex(i);
+    this->contacts_[i].SetIndex(i + 1);
   }
 }
 
@@ -20,9 +21,7 @@ void PhoneBook::ReceiveCommand() {
       return;
     };
 
-    if (command.empty()) {
-      continue;
-    } else if (command == "ADD") {
+    if (command == "ADD") {
       if (!this->OverwriteContact(this->contacts_[write_index])) {
         return;
       }
@@ -31,7 +30,8 @@ void PhoneBook::ReceiveCommand() {
       }
     } else if (command == "SEARCH") {
       this->DisplayContactList(this->contacts_, kMaxContacts);
-      this->SearchContact(this->contacts_);
+      if (!this->SearchContact(this->contacts_))
+        return;
     } else if (command == "EXIT") {
       return;
     } else {
@@ -43,29 +43,33 @@ void PhoneBook::ReceiveCommand() {
 }
 
 bool PhoneBook::GetInput(const std::string& prompt, std::string& input) {
-  std::cout << prompt;
-  if (!std::getline(std::cin, input)) {
-    if (std::cin.eof()) {
-      std::cerr << "EOF received" << std::endl;
+  while (true) {
+    std::cout << prompt;
+    if (!std::getline(std::cin, input)) {
+      if (std::cin.eof()) {
+        this->HandleError(kEndOfFile);
+      } else {
+        this->HandleError(kUnknown);
+      }
+      return false;
+    } else if (input.empty()) {
+      continue ;
     } else {
-      std::cerr << "Failed to input" << std::endl;
+      break;
     }
-    return false;
   }
   return true;
 }
 
-bool PhoneBook::GetInputNumber(const std::string& prompt, int& number) {
-  std::cout << prompt;
-  int input_number;
-  std::cin >> input_number;
-  if (std::cin.fail()) {
-    std::cin.clear();
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    std::cout << "Invalid input" << std::endl;
+bool PhoneBook::StringToNumber(const std::string& string, int& number) {
+  std::stringstream ss(string);
+  int input_number = 0;
+
+  ss >> input_number;
+  if (ss.fail()) {
+    this->HandleError(kInvalidInput);
     return false;
   }
-  std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
   number = input_number;
   return true;
 }
@@ -94,20 +98,29 @@ bool PhoneBook::OverwriteContact(Contact& contact) {
 }
 
 bool PhoneBook::SearchContact(Contact* contacts) {
-  int index;
-  if (!this->GetInputNumber(
-          "Please enter the index of the contact you want to view: ", index))
-    return false;
-  if (index < 0 || kMaxContacts <= index) {
+  std::string input_string;
+  int index = 0;
+  while (true) {
+    if (!this->GetInput(
+            "Please enter the index of the contact: ", input_string)) {
+      return false;
+    } else if (!StringToNumber(input_string, index)) {
+      continue;
+    }
+    if (0 <= index && index < kMaxContacts) {
+      break;
+    }
     std::cout << "The index value is out of range" << std::endl;
-    return false;
   }
   this->DisplayContactDetails(contacts[index]);
   return true;
 }
 
+// Todo: 電子帳を書いた数だけ表示する
 void PhoneBook::DisplayContactList(Contact* contacts, int size) {
+  std::cout << "---------------------------------------------" << std::endl;
   std::cout << "|     index|first name| last name|  nickname|" << std::endl;
+  std::cout << "---------------------------------------------" << std::endl;
   for (int i = 0; i < size; ++i) {
     this->DisplayContactRow(contacts[i]);
   }
@@ -127,6 +140,11 @@ void PhoneBook::DisplayContactRow(Contact& contact) {
   return;
 }
 
+std::string PhoneBook::TruncateField(const std::string& field, std::string::size_type width) {
+  return (field.size() > width) ? field.substr(0, width - 1) + "."
+                                : field;
+}
+
 void PhoneBook::DisplayContactDetails(Contact& contact) {
   std::cout << std::setw(16) << "index: " << contact.GetIndex()
             << std::endl
@@ -143,7 +161,19 @@ void PhoneBook::DisplayContactDetails(Contact& contact) {
   return;
 }
 
-std::string PhoneBook::TruncateField(const std::string& field, std::string::size_type width) {
-  return (field.size() > width) ? field.substr(0, width - 1) + "."
-                                : field;
+void PhoneBook::HandleError(ErrorCode code) {
+  switch (code) {
+    case kSuccess:
+      break;
+    case kEndOfFile:
+      std::cout << "\n" << "EOF reached" << std::endl;
+      break;
+    case kInvalidInput:
+      std::cout << "Invalid input" << std::endl;
+      break;
+    default:
+      std::cerr << "Failed to input" << std::endl;
+      break;
+  }
+  return;
 }
